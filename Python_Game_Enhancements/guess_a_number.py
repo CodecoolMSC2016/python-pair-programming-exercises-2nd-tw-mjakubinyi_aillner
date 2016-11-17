@@ -18,24 +18,23 @@ def exit_game():
             print("\n\033[1m" + "Írj Y vagy N karaktert!" + "\033[0m" + "\n")
 
 
-def message1(size):
+def message(size, chooser):
     # random generál becézéseket
     names = ["csintalan", "butuska", "gógyi"]
-    print("\033[1m" + "{} gondoltam jóval, te kis {}!!!".format(size, random.choice(names)) +
-          "\033[0m")
+    if chooser == "short":
+        text = ("{} gondoltam!".format(size))
+    else:
+        text = ("{} gondoltam jóval, te kis {}!!!".format(
+            size, random.choice(names)))
+    # itt hívja meg a külső file-ból importált függvényeket
     create_window()
-    szoveg()
-
-
-def message2(size):
-    print("\033[1m" + "{} gondoltam!".format(size) + "\033[0m")
-    create_window()
-    szoveg()
+    write_message(text)
 
 
 def write_to_file(user_name, tipp_counter, win):
     date = datetime.datetime.now()
     my_file = open("result.txt", "a+")
+    # beírja a file-ba, a nevet, a tippek számát, nyert-e, és a nyerés idejét
     my_file.write(user_name + "," + str(tipp_counter) + "," + str(win) + "," +
                   str(date) + "\n")
     my_file.close()
@@ -51,7 +50,7 @@ def main():
         gen_rand_num = random.randrange(1, 101)
         print(
             "\n\033[1m" + "Gondoltam egy számra 1 és 100 között, 8 tipp-ből találd ki!" + "\033[0m" + " \n(X-re kilép!)\n")
-        print(gen_rand_num)
+        # a gyorsabb teszteléshez: print(gen_rand_num)
 
         while tipp_counter < 9:
             while True:
@@ -78,19 +77,19 @@ def main():
             elif user_input < gen_rand_num:
                 size = "Nagyobbra"
                 if (gen_rand_num - user_input) > 50:
-                    message1(size)
+                    message(size, "long")
                     tipp_counter += 1
                 else:
-                    message2(size)
+                    message(size, "short")
                     tipp_counter += 1
 
             elif user_input > gen_rand_num:
                 size = "Kisebbre"
                 if (user_input - gen_rand_num) > 50:
-                    message1(size)
+                    message(size, "long")
                     tipp_counter += 1
                 else:
-                    message2(size)
+                    message(size, "short")
                     tipp_counter += 1
 
             if tipp_counter == 9:

@@ -1,32 +1,31 @@
 from tkinter import *
 #from tkinter import colorchooser
-ablak = None
+window = None
 
-def Gomb():
-    global ablak
-    ablak.destroy()
-   
-def szoveg():
-    global ablak
+
+def button_command():
+    global window
+    window.destroy()
+
+
+def write_message(text):
+    global window
     w = 300
     h = 200
-    ws = ablak.winfo_screenwidth() # width of the screen
-    hs = ablak.winfo_screenheight() # height of the screen
-    x = (ws/2)
-    y = (hs/3)
-    ablak.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    ws = window.winfo_screenwidth()  # a képernyő szélessége
+    hs = window.winfo_screenheight()  # a képernyo magassága
+    x = (ws / 2)
+    y = (hs / 3)
+    window.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-
-    l = Label(text="\n\n\nKISEBBRE GONDOLTAM!\n\n\n") 
-    gomb = Button(text="Tovább", fg="blue", command = Gomb)
+    l = Label(text="\n\n\n" + text + "\n\n\n")
+    button = Button(text="Tovább", fg="blue", command=button_command)
 
     l.pack()
-    gomb.pack()
-    ablak.mainloop()
+    button.pack()
+    window.mainloop()
+
 
 def create_window():
-    global ablak
-    ablak = Tk()
-
-
-   
+    global window
+    window = Tk()
