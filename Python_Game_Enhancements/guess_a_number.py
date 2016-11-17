@@ -16,7 +16,6 @@ def tipp_input(tipp_counter):
         if user_input == "X" or user_input == "x":
             print("\n" + "\033[1m" + "Kilépés" + "\033[0m")
             exit()
-
     return user_input
 
 
@@ -68,7 +67,7 @@ def main():
         gen_rand_num = random.randrange(1, 101)
         print(
             "\n\033[1m" + "Gondoltam egy számra 1 és 100 között, 8 tipp-ből találd ki!" + "\033[0m" + " \n(X-re kilép!)\n")
-        print(gen_rand_num)  # a gyorsabb teszteléshez
+        # print(gen_rand_num)  # a gyorsabb teszteléshez
 
         while tipp_counter <= max_tipp:
             user_input = tipp_input(tipp_counter)
@@ -77,10 +76,9 @@ def main():
                 print("\n" + "\033[92m" + "Talált :)" + "\033[0m" + "\n")
                 tipp_counter = 1
                 max_tipp -= 1
-                print("Következő szint! Már csak {} találatod van! \n".format(max_tipp))
                 # újabb random szám generálása, a nehezebb szinthez
                 gen_rand_num = random.randrange(1, 101)
-                print(gen_rand_num)  # a gyorsabb teszteléshez
+                # print(gen_rand_num)  # a gyorsabb teszteléshez
                 if max_tipp < 3:
                     print(
                         "\n" + "\033[92m" + "Megynyerted a játékot :) :) :)" + "\033[0m" + "\n")
@@ -90,9 +88,11 @@ def main():
                     tipp_counter = 1
                     max_tipp = 8
                     exit_game()
+                print("Következő szint! Már csak {} tipped van! \n".format(max_tipp))
 
             elif user_input > 100 or user_input < 1:
-                print("\033[1m" + "1 és 100 közöttit írj be!!!" + "\033[0m")
+                print("\033[1m" +
+                      "1 és 100 közötti számot írj be!!!" + "\033[0m")
 
             elif user_input < gen_rand_num:
                 size = "Nagyobbra"
@@ -119,6 +119,7 @@ def main():
                 write_to_file(user_name, tipp_counter - 1, win)
                 # újabb random szám generálása, ha új játék kezdődne
                 tipp_counter = 1
+                max_tipp = 8
                 gen_rand_num = random.randrange(1, 101)
                 exit_game()
 
