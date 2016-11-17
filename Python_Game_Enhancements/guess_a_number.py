@@ -4,18 +4,20 @@ import os
 from window import *
 
 
-def exit_game():
-    while True:
-        new = input("Még egy játék?" +
-                    "\033[1m" + " [Y/N]" + "\033[0m" + ":")
-        if new == "Y" or new == "y":
-            os.system("clear")
-            break
-        elif new == "N" or new == "n":
-            print("\n\033[1m" + "Kilépés" + "\033[0m")
+def tipp_input(tipp_counter):
+    valid_input = False
+    while not valid_input:
+        user_input = input("{}. Tipp:".format(tipp_counter))
+        try:
+            user_input = int(user_input)
+            valid_input = True
+        except(ValueError):
+            print("\033[1m" + "Számot írj be!" + "\033[0m")
+        if user_input == "X" or user_input == "x":
+            print("\n" + "\033[1m" + "Kilépés" + "\033[0m")
             exit()
-        else:
-            print("\n\033[1m" + "Írj Y vagy N karaktert!" + "\033[0m" + "\n")
+
+    return user_input
 
 
 def message(size, chooser):
@@ -40,9 +42,25 @@ def write_to_file(user_name, tipp_counter, win):
     my_file.close()
 
 
+def exit_game():
+    while True:
+        new = input("Még egy játék?" +
+                    "\033[1m" + " [Y/N]" + "\033[0m" + ":")
+        if new == "Y" or new == "y":
+            os.system("clear")
+            print("\033[33m" + "Új játék!" + "\033[0m" + "\n")
+            break
+        elif new == "N" or new == "n":
+            print("\n\033[1m" + "Kilépés" + "\033[0m")
+            exit()
+        else:
+            print("\n\033[1m" + "Írj Y vagy N karaktert!" + "\033[0m" + "\n")
+
+
 def main():
     os.system("clear")
     tipp_counter = 1
+    max_tipp = 8
     running = True
     user_name = input("Add meg a neved:")
 
@@ -50,29 +68,31 @@ def main():
         gen_rand_num = random.randrange(1, 101)
         print(
             "\n\033[1m" + "Gondoltam egy számra 1 és 100 között, 8 tipp-ből találd ki!" + "\033[0m" + " \n(X-re kilép!)\n")
-        # a gyorsabb teszteléshez: print(gen_rand_num)
+        print(gen_rand_num)  # a gyorsabb teszteléshez
 
-        while tipp_counter < 9:
-            while True:
-                user_input = input("{}. Tipp:".format(tipp_counter))
-                if user_input.isdigit():
-                    user_input = int(user_input)
-                    break
-                elif user_input == "X" or user_input == "x":
-                    print("\n" + "\033[1m" + "Kilépés" + "\033[0m")
-                    exit()
-                else:
-                    print("\033[1m" + "Számot írj be!" + "\033[0m")
+        while tipp_counter <= max_tipp:
+            user_input = tipp_input(tipp_counter)
 
             if user_input == gen_rand_num:
                 print("\n" + "\033[92m" + "Talált :)" + "\033[0m" + "\n")
-                # eredmények txt-be írása
-                win = True
-                write_to_file(user_name, tipp_counter, win)
-                # újabb random szám generálása, ha új játék kezdődne
                 tipp_counter = 1
+                max_tipp -= 1
+                print("Következő szint! Már csak {} találatod van! \n".format(max_tipp))
+                # újabb random szám generálása, a nehezebb szinthez
                 gen_rand_num = random.randrange(1, 101)
-                exit_game()
+                print(gen_rand_num)  # a gyorsabb teszteléshez
+                if max_tipp < 3:
+                    print(
+                        "\n" + "\033[92m" + "Megynyerted a játékot :) :) :)" + "\033[0m" + "\n")
+                    # eredmények txt-be írása
+                    win = True
+                    write_to_file(user_name, tipp_counter, win)
+                    tipp_counter = 1
+                    max_tipp = 8
+                    exit_game()
+
+            elif user_input > 100 or user_input < 1:
+                print("\033[1m" + "1 és 100 közöttit írj be!!!" + "\033[0m")
 
             elif user_input < gen_rand_num:
                 size = "Nagyobbra"
@@ -92,12 +112,11 @@ def main():
                     message(size, "short")
                     tipp_counter += 1
 
-            if tipp_counter == 9:
+            if tipp_counter > max_tipp:
                 print("\n\033[93m" + "Vesztettél :(" + "\033[0m" + "\n")
                 # eredmények txt-be írása
                 win = False
-                tipp_counter = 8
-                write_to_file(user_name, tipp_counter, win)
+                write_to_file(user_name, tipp_counter - 1, win)
                 # újabb random szám generálása, ha új játék kezdődne
                 tipp_counter = 1
                 gen_rand_num = random.randrange(1, 101)
